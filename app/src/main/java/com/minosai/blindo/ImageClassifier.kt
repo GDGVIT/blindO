@@ -9,6 +9,7 @@ import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.reflect.Constructor
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
@@ -22,8 +23,10 @@ import kotlin.experimental.and
 
 class ImageClassifier {
 
-    val DIM_IMG_SIZE_X = 224
-    val DIM_IMG_SIZE_Y = 224
+    companion object {
+        val DIM_IMG_SIZE_X = 224
+        val DIM_IMG_SIZE_Y = 224
+    }
     private val TAG = "ImageClassifier"
     private val MODEL_PATH = "mobilenet_quant_v1_224.tflite"
     private val LABEL_PATH = "labels.txt"
@@ -48,7 +51,7 @@ class ImageClassifier {
     )
 
     @Throws(IOException::class)
-    fun ImageClassifier(activity: Activity) {
+    constructor(activity: Activity) {
         tflite = Interpreter(loadModelFile(activity))
         labelList = loadLabelList(activity)
         imgData = ByteBuffer.allocateDirect(
@@ -103,7 +106,6 @@ class ImageClassifier {
         }
         imgData?.rewind()
         bitmap.getPixels(intValues, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        // Convert the image to floating point.
         var pixel = 0
         val startTime = SystemClock.uptimeMillis()
         for (i in 0 until DIM_IMG_SIZE_X) {
