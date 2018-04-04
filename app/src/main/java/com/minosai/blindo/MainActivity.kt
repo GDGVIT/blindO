@@ -14,11 +14,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         checkCameraPermission()
-
-        savedInstanceState?.let {
-            supportFragmentManager.beginTransaction().replace(R.id.container, MainCameraFragment())
-                    .commit()
-        }
     }
 
     private fun checkCameraPermission() {
@@ -28,6 +23,8 @@ class MainActivity : AppCompatActivity() {
             } else {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1234)
             }
+        } else {
+            showFragment()
         }
     }
 
@@ -35,9 +32,16 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             1234 -> {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) { }
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    showFragment()
+                }
             }
         }
+    }
+
+    fun showFragment() {
+        supportFragmentManager.beginTransaction().replace(R.id.container, MainCameraFragment())
+                .commit()
     }
 }
 

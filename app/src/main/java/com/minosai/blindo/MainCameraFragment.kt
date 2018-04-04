@@ -172,6 +172,7 @@ class MainCameraFragment : Fragment() {
             imageClassifier = ImageClassifier(activity)
         } catch (e: IOException) {
             Log.e(TAG, "Failed to initialize image classifier")
+            Toast.makeText(context, "Fauiled to initalize image classifier", Toast.LENGTH_SHORT).show()
         }
 
         startBackgroundThread()
@@ -438,7 +439,7 @@ class MainCameraFragment : Fragment() {
         }
         val bitmap = texture.getBitmap(ImageClassifier.DIM_IMG_SIZE_X, ImageClassifier.DIM_IMG_SIZE_Y)
         val textToShow = imageClassifier?.classifyFrame(bitmap)
-        bitmap.recycle()
+        bitmap?.recycle()
         Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show()
     }
 
