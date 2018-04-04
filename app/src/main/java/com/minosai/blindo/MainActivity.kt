@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1234)
+                ActivityCompat.requestPermissions(this, getRequiredPermissions(), 1234)
             }
         } else {
             showFragment()
@@ -42,6 +42,23 @@ class MainActivity : AppCompatActivity() {
     fun showFragment() {
         supportFragmentManager.beginTransaction().replace(R.id.container, MainCameraFragment())
                 .commit()
+    }
+
+    private fun getRequiredPermissions(): Array<String> {
+        try {
+            val info = this
+                    .getPackageManager()
+                    .getPackageInfo(this.getPackageName(), PackageManager.GET_PERMISSIONS)
+            val ps = info.requestedPermissions
+            return if (ps != null && ps!!.size > 0) {
+                ps
+            } else {
+                emptyArray()
+            }
+        } catch (e: Exception) {
+            return emptyArray()
+        }
+
     }
 }
 
